@@ -14,8 +14,11 @@ default: &default
   encoding: utf8mb4
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
   username: root
-  password:
+  password: root
   host: localhost
+  ssl_mode: :disabled
+  sslverify: false
+  
 
 development:
   <<: *default
@@ -53,3 +56,4 @@ production:
   database: pruebadespliegue_production
   username: pruebadespliegue
   password: <%= ENV["PRUEBADESPLIEGUE_DATABASE_PASSWORD"] %>
+  
