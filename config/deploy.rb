@@ -15,8 +15,8 @@ set :full_app_name, "#{fetch(:application)}_#{fetch(:stage)}"
 # If ssh access is restricted, probably you need to use https access
 set :repo_url, deploysecret(:repo_url)
 
-set :scm, :git
-set :revision, `git rev-parse --short #{fetch(:branch)}`.strip
+#set :scm, :git
+#set :revision, `git rev-parse --short #{fetch(:branch)}`.strip
 
 set :log_level, :info
 set :pty, true
