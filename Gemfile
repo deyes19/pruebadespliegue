@@ -62,13 +62,13 @@ end
 group :development do
   # Use console on exceptions pages [https://github.com/rails/web-console]
   gem "web-console"
-  gem 'capistrano'
-  gem 'capistrano-bundler'
-  gem 'capistrano-rails', github: 'capistrano/rails'
-  gem 'capistrano-rails-console'
-  gem 'capistrano-sidekiq'
-  gem 'rvm1-capistrano3', require: false
+
   gem 'airbrussh', require: false
+  gem 'capistrano', require: false
+  gem 'capistrano-rvm', require: false
+  gem 'capistrano-rails', require: false
+  gem 'capistrano-bundler', require: false
+  gem 'capistrano3-puma', require: false
   gem 'net-ssh', '>= 6.0.2'
   gem 'ed25519', '>= 1.2', '< 2.0'
   gem 'bcrypt_pbkdf', '>= 1.0', '< 2.0'

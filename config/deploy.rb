@@ -1,80 +1,43 @@
-# config valid only for current version of Capistrano
-lock '3.17.1'
+# config valid for current version and patch releases of Capistrano
+lock "~> 3.17.1"
 
-def deploysecret(key)
-  @deploy_secrets_yml ||= YAML.load_file('config/deploy-secrets.yml')[fetch(:stage).to_s]
-  @deploy_secrets_yml[key.to_s]
-end
+server '44.210.112.191', port:22, primary: true
+set :application, "pruebadespliegue"
+set :repo_url, "git@github.com:deyes19/pruebadespliegue.git"
 
-set :rails_env, fetch(:stage)
-set :rvm_ruby_version, deploysecret(:rvm_ruby_version)
-set :rvm_type, :user
+set :branch, :main
 
-set :application, deploysecret(:application)
-set :full_app_name, "#{fetch(:application)}_#{fetch(:stage)}"
-# If ssh access is restricted, probably you need to use https access
-set :repo_url, deploysecret(:repo_url)
+set :user, 'web'
 
-#set :scm, :git
-#set :revision, `git rev-parse --short #{fetch(:branch)}`.strip
+set :puma_threads, [4, 16]
 
-set :log_level, :info
+set :puma_workers, 0
+
 set :pty, true
-set :use_sudo, false
 
-set :linked_files, %w{config/database.yml config/secrets.yml}
-set :linked_dirs, %w{log tmp public/system public/assets}
+set :use_sudo,  false
 
-set :keep_releases, 10
+set :stage, :production
 
-set :local_user, ENV['USER']
-set :deploy_user, deploysecret(:user)
+set :deploy_via, :remote_cache
 
-# Run test before deploy
-set :tests, []
+set :deploy_to, "/home/#{fetch(:user)}/apps/#{fetch(:application)}"
 
-# Config files should be copied by deploy:setup_config
-set(:config_files, %w(
-  log_rotation
-  database.yml
-  secrets.yml
-  unicorn.rb
-  sidekiq.yml
-  nginx.conf
-  unicorn_init.sh
-))
+set :puma_bind, "unix://#{shared_path}/tmp/sockets/#{fetch(:application)}-puma.sock"
 
-set(:symlinks, [
-                 {
-                    source: 'nginx.conf',
-                    link: "/etc/nginx/sites-enabled/#{fetch(:full_app_name)}"
-                 },
-                 {
-                    source: 'unicorn_init.sh',
-                    link: "/etc/init.d/unicorn_#{fetch(:full_app_name)}"
-                 },
-                 {
-                     source: 'log_rotation',
-                     link: "/etc/logrotate.d/#{fetch(:full_app_name)}"
-                 }
-             ])
+set :puma_state, "#{shared_path}/tmp/pids/puma.state"
 
-namespace :deploy do
-  # deploy:setup_config
-  # remove the default nginx configuration as it will tend
-  # to conflict with our configs.
-  before 'deploy:setup_config', 'nginx:remove_default_vhost'
-  before 'deploy:setup_config', 'nginx:enable_virtual_host'
-  after 'deploy:setup_config', 'nginx:reload'
-  after 'deploy:setup_config', 'nginx:executable_init'
+set :puma_pid, "#{shared_path}/tp/pids/puma.pid"
 
-  # Check right version of deploy branch
-  before :deploy, 'deploy:check_revision'
-  # Run test aund continue only if passed
-  before :deploy, 'deploy:run_tests'
-  # Compile assets locally and then rsync
-  # after 'deploy:symlink:shared', 'deploy:compile_assets_locally'
-  after :finishing, 'deploy:cleanup'
-  # Restart unicorn
-  after 'deploy:publishing', 'deploy:restart'
-end
+set :puma_access_log, "#{release_path}/log/puma.access.log"
+
+set :puma_error_log, "#{release_path}/log/puma.error.log"
+
+set :ssh_options, {forward_agent: true, user: fetch(:user), keys: %w(~/.ssh/id_rsa.pub)}
+
+set :puma_preload_app, true
+
+set :puma_worker_timeout, nil
+
+set :puma_init_active_record, true
+ 
