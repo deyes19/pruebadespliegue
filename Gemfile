@@ -69,6 +69,9 @@ group :development do
   gem 'capistrano-sidekiq'
   gem 'rvm1-capistrano3', require: false
   gem 'airbrussh', require: false
+  gem 'net-ssh', '>= 6.0.2'
+  gem 'ed25519', '>= 1.2', '< 2.0'
+  gem 'bcrypt_pbkdf', '>= 1.0', '< 2.0'
 
 
   # Add speed badges [https://github.com/MiniProfiler/rack-mini-profiler]
