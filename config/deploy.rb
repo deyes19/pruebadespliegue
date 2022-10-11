@@ -1,8 +1,10 @@
 # config valid for current version and patch releases of Capistrano
 lock "~> 3.17.1"
 
-server '44.210.112.191', port:22, primary: true
+server '44.210.112.191', port:22, roles: [:web, :app, :db], primary: true
+
 set :application, "pruebadespliegue"
+
 set :repo_url, "git@github.com:deyes19/pruebadespliegue.git"
 
 set :branch, :main
