@@ -21,6 +21,8 @@ set :use_sudo,  false
 
 set :stage, :production
 
+set :rvm_map_bins, %w{gem rake ruby rails bundle}
+
 set :deploy_via, :remote_cache
 
 set :deploy_to, "/home/#{fetch(:user)}/apps/#{fetch(:application)}"
